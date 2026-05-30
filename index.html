@@ -3,86 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShowBee | Professional Video Editor</title>
+    <title>ShowBee Engine | Advanced Automation</title>
     <style>
-        :root {
-            --bg-color: #121212;
-            --panel-color: #1e1e1e;
-            --accent-color: #3b82f6;
-            --text-color: #e5e7eb;
-            --border-color: #374151;
-        }
-
-        body { margin: 0; background: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* --- Header --- */
-        header { height: 50px; background: var(--panel-color); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .logo { font-weight: bold; color: var(--accent-color); letter-spacing: 1px; }
-        .toolbar { display: flex; gap: 10px; }
-        .btn { background: #374151; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
-        .btn:hover { background: #4b5563; }
-
-        /* --- Layout Main --- */
-        main { display: flex; flex: 1; overflow: hidden; }
-        aside { width: 260px; background: var(--panel-color); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .library-header { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.8rem; text-transform: uppercase; color: #9ca3af; }
-        #file-list { flex: 1; overflow-y: auto; padding: 10px; }
-
-        section { flex: 1; display: flex; flex-direction: column; }
+        :root { --bg: #0d1117; --panel: #161b22; --border: #30363d; --accent: #58a6ff; --text: #c9d1d9; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui; height: 100vh; display: flex; flex-direction: column; }
         
-        /* --- Preview --- */
-        #preview-area { flex: 2; background: #000; display: flex; align-items: center; justify-content: center; position: relative; }
-        #video-preview { max-width: 95%; max-height: 90%; border: 1px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-
-        /* --- Timeline --- */
-        #timeline { height: 220px; background: #181818; border-top: 2px solid var(--accent-color); padding: 10px; display: flex; flex-direction: column; gap: 5px; overflow-x: auto; }
-        .timeline-controls { height: 30px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333; margin-bottom: 5px; }
-        .track { height: 80px; background: #262626; border-radius: 4px; display: flex; align-items: center; padding: 5px; gap: 5px; overflow-x: auto; }
-        .clip { min-width: 150px; height: 60px; background: var(--accent-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; cursor: grab; border: 1px solid #1d4ed8; }
-
-        /* --- Footer --- */
-        footer { height: 30px; background: var(--panel-color); border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; font-size: 0.75rem; color: #9ca3af; }
+        /* Top Navigation */
+        header { height: 50px; background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+        .logo { font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+        
+        /* Main Layout */
+        .workspace { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Sidebar Components */
+        .sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .tool-group { padding: 10px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .tool-group:hover { background: #1f242c; border-color: var(--accent); }
+        
+        /* Main Area */
+        .main-canvas { flex: 1; background: radial-gradient(#1f242c 1px, transparent 1px); background-size: 20px 20px; position: relative; }
+        
+        /* Right Inspector Panel */
+        .inspector { width: 300px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; }
+        
+        /* Bottom Console */
+        .console { height: 180px; background: #000; border-top: 1px solid var(--border); padding: 15px; overflow-y: auto; font-family: 'Cascadia Code', monospace; font-size: 0.85rem; color: #4af626; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">SHOWBEE v0.2</div>
-        <div class="toolbar">
-            <button class="btn">Import</button>
-            <button class="btn">Split</button>
-            <button class="btn">Export</button>
-            <input type="file" id="video-upload" style="display:none">
+        <div class="logo">SHOWBEE ENGINE v2.0</div>
+        <div>
+            <button onclick="engine.run()">Execute Sequence</button>
+            <button onclick="engine.clear()">Clear</button>
         </div>
     </header>
 
-    <main>
-        <aside>
-            <div class="library-header">Project Media</div>
-            <div id="file-list"></div>
+    <div class="workspace">
+        <aside class="sidebar" id="module-palette">
+            <h3>Available Modules</h3>
+            <div class="tool-group" draggable="true">File Input</div>
+            <div class="tool-group" draggable="true">Data Parser</div>
+            <div class="tool-group" draggable="true">Cloud Sync</div>
+            <div class="tool-group" draggable="true">Notification</div>
         </aside>
 
-        <section>
-            <div id="preview-area">
-                <video id="video-preview"></video>
-            </div>
-            <div id="timeline">
-                <div class="timeline-controls">
-                    <button class="btn" style="padding: 2px 8px;">Play</button>
-                    <div id="time-display">00:00 / 00:00</div>
-                </div>
-                <div class="track" id="video-track">
-                    <div class="clip" draggable="true">Video_Clip_01.mp4</div>
-                </div>
-            </div>
-        </section>
-    </main>
+        <section class="main-canvas" id="canvas"></section>
 
-    <footer>
-        <div>Ready</div>
-        <div>ShowBee Engine v0.1</div>
-    </footer>
+        <aside class="inspector">
+            <h3>Properties</h3>
+            <div id="prop-editor">Select a node to edit</div>
+        </aside>
+    </div>
 
-    <script src="script.js"></script>
+    <div class="console" id="log-output">
+        [SYSTEM] ShowBee Engine Initialized...
+    </div>
+
+    <script src="engine.js"></script>
 </body>
 </html>
