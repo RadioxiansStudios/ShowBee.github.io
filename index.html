@@ -3,64 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShowBee Engine | Advanced Automation</title>
+    <title>ShowBee Engine | Core Automation System</title>
     <style>
-        :root { --bg: #0d1117; --panel: #161b22; --border: #30363d; --accent: #58a6ff; --text: #c9d1d9; }
+        :root { --bg: #0d1117; --panel: #161b22; --border: #30363d; --accent: #58a6ff; --text: #c9d1d9; --dim: #8b949e; }
         * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui; height: 100vh; display: flex; flex-direction: column; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* Top Navigation */
+        /* Top Header (10 lines) */
         header { height: 50px; background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .logo { font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+        .logo { font-weight: 900; color: var(--accent); letter-spacing: -1px; font-size: 1.2rem; }
         
-        /* Main Layout */
+        /* Workspace (Main) */
         .workspace { display: flex; flex: 1; overflow: hidden; }
         
-        /* Sidebar Components */
-        .sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .tool-group { padding: 10px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .tool-group:hover { background: #1f242c; border-color: var(--accent); }
+        /* Left Sidebar (Modules) */
+        .sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .sidebar h3 { font-size: 0.8rem; color: var(--dim); text-transform: uppercase; margin: 0; }
+        .module-item { background: #21262d; border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: move; transition: 0.2s; }
+        .module-item:hover { border-color: var(--accent); }
+
+        /* Canvas Area */
+        .canvas { flex: 1; background: radial-gradient(#21262d 1px, transparent 1px); background-size: 25px 25px; position: relative; }
         
-        /* Main Area */
-        .main-canvas { flex: 1; background: radial-gradient(#1f242c 1px, transparent 1px); background-size: 20px 20px; position: relative; }
+        /* Inspector Panel (Right) */
+        .inspector { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; }
+        .input-field { width: 100%; background: #0d1117; border: 1px solid var(--border); padding: 8px; color: white; border-radius: 4px; margin-top: 5px; }
+
+        /* Console Log (Bottom) */
+        .console { height: 200px; background: #000; border-top: 1px solid var(--border); padding: 15px; font-family: 'Consolas', monospace; font-size: 0.85rem; color: #4af626; overflow-y: auto; }
         
-        /* Right Inspector Panel */
-        .inspector { width: 300px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; }
-        
-        /* Bottom Console */
-        .console { height: 180px; background: #000; border-top: 1px solid var(--border); padding: 15px; overflow-y: auto; font-family: 'Cascadia Code', monospace; font-size: 0.85rem; color: #4af626; }
+        /* Status Bar */
+        footer { height: 30px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; font-size: 0.75rem; color: var(--dim); justify-content: space-between; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">SHOWBEE ENGINE v2.0</div>
-        <div>
-            <button onclick="engine.run()">Execute Sequence</button>
-            <button onclick="engine.clear()">Clear</button>
+        <div class="logo">SHOWBEE ENGINE v2.4.0</div>
+        <div class="header-tools">
+            <button class="action-btn">Save Project</button>
+            <button class="action-btn" onclick="engine.run()">RUN SEQUENCE</button>
         </div>
     </header>
 
     <div class="workspace">
-        <aside class="sidebar" id="module-palette">
-            <h3>Available Modules</h3>
-            <div class="tool-group" draggable="true">File Input</div>
-            <div class="tool-group" draggable="true">Data Parser</div>
-            <div class="tool-group" draggable="true">Cloud Sync</div>
-            <div class="tool-group" draggable="true">Notification</div>
+        <aside class="sidebar">
+            <h3>Module Palette</h3>
+            <div class="module-item" onclick="engine.addNode('File Reader')">📦 File Reader</div>
+            <div class="module-item" onclick="engine.addNode('Data Parser')">⚙️ Data Parser</div>
+            <div class="module-item" onclick="engine.addNode('Network Sync')">🌐 Network Sync</div>
+            <div class="module-item" onclick="engine.addNode('Image Encoder')">🖼️ Image Encoder</div>
+            <div class="module-item" onclick="engine.addNode('Email Service')">📧 Email Service</div>
         </aside>
 
-        <section class="main-canvas" id="canvas"></section>
+        <section class="canvas" id="canvas">
+            </section>
 
         <aside class="inspector">
-            <h3>Properties</h3>
-            <div id="prop-editor">Select a node to edit</div>
+            <h3>Node Inspector</h3>
+            <label>Node Name:</label>
+            <input type="text" class="input-field" placeholder="Enter name...">
+            <label style="display:block; margin-top:15px;">Configuration:</label>
+            <textarea class="input-field" rows="5"></textarea>
         </aside>
     </div>
 
     <div class="console" id="log-output">
-        [SYSTEM] ShowBee Engine Initialized...
+        [SYSTEM] ShowBee Engine v2.4.0 started...
+        [SYSTEM] Initializing memory buffers...
+        [SYSTEM] Ready for input.
     </div>
+
+    <footer>
+        <div>CPU: 4% | MEM: 128MB</div>
+        <div>ShowBee Core Engine</div>
+    </footer>
 
     <script src="engine.js"></script>
 </body>
