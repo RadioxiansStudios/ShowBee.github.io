@@ -2,6 +2,8 @@ class ShowBeeEngine {
     constructor() {
         this.nodes = [];
         this.logElement = document.getElementById('log-output');
+        this.canvas = document.getElementById('canvas');
+        this.inspector = document.getElementById('prop-editor');
     }
 
     log(msg) {
@@ -11,27 +13,69 @@ class ShowBeeEngine {
         this.logElement.scrollTop = this.logElement.scrollHeight;
     }
 
-    run() {
-        this.log("Starting Execution Sequence...");
-        if(this.nodes.length === 0) {
-            this.log("ERROR: No modules found in canvas.");
-            return;
-        }
-        // Qui la logica per iterare i nodi
-        this.nodes.forEach(node => {
-            this.log(`Processing module: ${node.type}...`);
-        });
-        this.log("Sequence Completed.");
+    addNode(type) {
+        const newNode = { 
+            id: Date.now(), 
+            type: type, 
+            x: 50 + (this.nodes.length * 20), 
+            y: 50 + (this.nodes.length * 20) 
+        };
+        
+        this.nodes.push(newNode);
+        this.renderNode(newNode);
+        this.log(`Node added: ${type}`);
     }
 
-    addNode(type) {
-        const newNode = { id: Date.now(), type: type };
-        this.nodes.push(newNode);
-        this.log(`Node added: ${type}`);
+    renderNode(node) {
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'node-card';
+        nodeEl.style.position = 'absolute';
+        nodeEl.style.left = node.x + 'px';
+        nodeEl.style.top = node.y + 'px';
+        nodeEl.style.width = '180px';
+        nodeEl.style.padding = '15px';
+        nodeEl.style.background = '#161b22';
+        nodeEl.style.border = '1px solid #58a6ff';
+        nodeEl.style.borderRadius = '8px';
+        nodeEl.style.cursor = 'move';
+        
+        nodeEl.innerHTML = `<strong>${node.type}</strong><br><small>ID: ${node.id}</small>`;
+        
+        // Cliccando il nodo, aggiorniamo l'inspector
+        nodeEl.onclick = () => this.selectNode(node);
+        
+        this.canvas.appendChild(nodeEl);
+    }
+
+    selectNode(node) {
+        this.inspector.innerHTML = `
+            <div style="padding:10px; border-bottom:1px solid #30363d">
+                <p><strong>Configuring:</strong> ${node.type}</p>
+                <label>Node Name:</label>
+                <input type="text" class="input-field" value="${node.type}">
+                <label style="display:block; margin-top:10px;">Settings:</label>
+                <textarea class="input-field" rows="3"></textarea>
+            </div>
+        `;
+        this.log(`Inspector updated for Node ID: ${node.id}`);
+    }
+
+    run() {
+        this.log("Executing Sequence...");
+        if(this.nodes.length === 0) return this.log("ERROR: Canvas empty.");
+        
+        // Simuliamo un'esecuzione reale
+        this.nodes.forEach((node, index) => {
+            setTimeout(() => {
+                this.log(`Running [${node.type}]... Success.`);
+            }, index * 800);
+        });
     }
 
     clear() {
         this.nodes = [];
+        this.canvas.innerHTML = '';
+        this.inspector.innerHTML = 'Select a node to edit';
         this.log("Canvas cleared.");
     }
 }
@@ -39,9 +83,9 @@ class ShowBeeEngine {
 // Inizializzazione
 const engine = new ShowBeeEngine();
 
-// Event Listeners (Esempio per aggiungere nodi)
+// Binding dei click sulla sidebar
 document.querySelectorAll('.tool-group').forEach(item => {
     item.addEventListener('click', (e) => {
-        engine.addNode(e.target.textContent);
+        engine.addNode(e.target.textContent.trim());
     });
 });
