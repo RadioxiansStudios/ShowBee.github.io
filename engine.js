@@ -60,15 +60,22 @@ class ShowBeeEngine {
         this.log(`Inspector updated for Node ID: ${node.id}`);
     }
 
-    run() {
-        this.log("Executing Sequence...");
-        if(this.nodes.length === 0) return this.log("ERROR: Canvas empty.");
+run() {
+        this.log("Executing Sequence: Renaming 3 folders...");
         
-        // Simuliamo un'esecuzione reale
-        this.nodes.forEach((node, index) => {
+        // Simuliamo l'elaborazione dei dati
+        const foldersToRename = ["CIAO_1", "CIAO_2", "CIAO_3"];
+        
+        foldersToRename.forEach((folder, index) => {
             setTimeout(() => {
-                this.log(`Running [${node.type}]... Success.`);
-            }, index * 800);
+                const newName = `PROCESSED_${folder}`;
+                this.log(`Renaming: ${folder} -> ${newName}... SUCCESS`);
+                
+                // Se siamo all'ultimo file, chiudiamo il processo
+                if(index === foldersToRename.length - 1) {
+                    this.log("--- SEQUENCE COMPLETED: 3 Folders Renamed ---");
+                }
+            }, (index + 1) * 1000);
         });
     }
 
