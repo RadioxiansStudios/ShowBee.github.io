@@ -1,0 +1,30 @@
+# Under LICENSE: Radioxians SA LICENSE (Source Available, for more info, view the file LICENSE)
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowBee | Editor Video</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+        #video-preview { width: 70%; background: #000; margin-top: 20px; border: 2px solid #333; }
+        #timeline { width: 90%; height: 150px; background: #222; margin-top: 20px; display: flex; border: 1px solid #444; padding: 10px; gap: 10px; overflow-x: auto; }
+        .clip { min-width: 100px; height: 100%; background: #007bff; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: move; }
+        #upload-btn { margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>ShowBee Editor</h1>
+    
+    <input type="file" id="video-upload" accept="video/*">
+    <video id="video-preview" controls></video>
+
+    <div id="timeline">
+        <div class="clip" draggable="true">Clip 1</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
