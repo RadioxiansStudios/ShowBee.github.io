@@ -5,25 +5,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShowBee | Editor Video</title>
+    <title>ShowBee | Pro Editor Video</title>
     <style>
-        body { background-color: #121212; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
-        #video-preview { width: 70%; background: #000; margin-top: 20px; border: 2px solid #333; }
-        #timeline { width: 90%; height: 150px; background: #222; margin-top: 20px; display: flex; border: 1px solid #444; padding: 10px; gap: 10px; overflow-x: auto; }
-        .clip { min-width: 100px; height: 100%; background: #007bff; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: move; }
-        #upload-btn { margin-top: 20px; }
+        :root { --bg: #121212; --panel: #1e1e1e; --accent: #2563eb; --text: #e0e0e0; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* Header */
+        header { padding: 10px 20px; background: var(--panel); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+        
+        /* Layout Main */
+        main { display: flex; flex-grow: 1; overflow: hidden; }
+        aside { width: 250px; background: var(--panel); border-right: 1px solid #333; padding: 15px; }
+        section { flex-grow: 1; display: flex; flex-direction: column; }
+        
+        /* Preview & Timeline */
+        #preview-area { flex-grow: 2; display: flex; justify-content: center; align-items: center; background: #000; }
+        #video-preview { max-width: 90%; max-height: 80%; border: 1px solid #333; }
+        
+        #timeline { height: 200px; background: #181818; border-top: 1px solid #333; padding: 10px; display: flex; gap: 10px; overflow-x: auto; }
+        .clip-track { height: 100%; display: flex; align-items: center; gap: 5px; }
+        .clip { width: 120px; height: 80px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: grab; font-size: 0.8rem; }
+        
+        /* Footer */
+        footer { padding: 5px 20px; background: var(--panel); font-size: 0.8rem; border-top: 1px solid #333; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
-    <h1>ShowBee Editor</h1>
-    
-    <input type="file" id="video-upload" accept="video/*">
-    <video id="video-preview" controls></video>
+    <header>
+        <div class="logo">ShowBee</div>
+        <div class="toolbar">
+            <button>Taglia</button>
+            <button>Dividi</button>
+            <input type="file" id="video-upload" accept="video/*">
+        </div>
+    </header>
 
-    <div id="timeline">
-        <div class="clip" draggable="true">Clip 1</div>
-    </div>
+    <main>
+        <aside>
+            <h3>Libreria</h3>
+            <div id="file-list">Nessun file caricato</div>
+        </aside>
+
+        <section>
+            <div id="preview-area">
+                <video id="video-preview" controls></video>
+            </div>
+            <div id="timeline">
+                <div class="clip-track">
+                    <div class="clip" draggable="true">Clip 1</div>
+                    <div class="clip" draggable="true">Clip 2</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div>Stato: Pronto</div>
+        <div>ShowBee v0.1.0-alpha</div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
